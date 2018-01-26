@@ -8,15 +8,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class Image {
 
-    @SerializedName("title")
-    private String Title;
-    @SerializedName("image")
-    private String Image;
-    @SerializedName("response")
-    private String Response;
+
+    private String title;
+
+    private String image;
+
+    private String response;
 
     public String getResponse() {
-        return Response;
+        return response;
     }
 
 

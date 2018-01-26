@@ -9,16 +9,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button upload, chose;
@@ -49,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (view.getId()){
 
                case R.id.uploadImg:
-
+            uplaodImage();
 
                 break;
 
@@ -82,5 +89,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+    }
+
+    private void uplaodImage(){
+        final String image = ImageToString();
+        String imgTitle = title.getText().toString();
+        ApiInterface apiInterface = ApiClient.getRetrofit().create(ApiInterface.class);
+        Call<Image> call = apiInterface.uploadImage(imgTitle,image);
+        call.enqueue(new Callback<Image>() {
+            @Override
+            public void onResponse(Call<Image> call, Response<Image> response) {
+                Log.d("test",response.body().toString());
+                Image image1 = response.body();
+                if (image1 != null) {
+                    Toast.makeText(getApplicationContext(),image1.getResponse(),Toast.LENGTH_LONG).show();
+                }
+                layout.setVisibility(View.GONE);
+                chose.setEnabled(true);
+                upload.setEnabled(false);
+            }
+
+            @Override
+            public void onFailure(Call<Image> call, Throwable t) {
+                Log.d("error",t.getMessage());
+            }
+        });
+    }
+
+    private String ImageToString(){
+        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,arrayOutputStream);
+        byte[] array = arrayOutputStream.toByteArray();
+        Log.d("data",Base64.encodeToString(array,Base64.DEFAULT));
+        return Base64.encodeToString(array,Base64.DEFAULT);
+
     }
 }
