@@ -1,6 +1,10 @@
 package com.example.mujahid.retrofit_downloaduploaddemo;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +12,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.IOException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    Button upload, chose;
+    CircleImageView imageView;
+    final static int imageRequest = 777;
+    Bitmap bitmap;
+    EditText title;
+    LinearLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,28 +34,53 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        layout = findViewById(R.id.layout);
+        upload = findViewById(R.id.uploadImg);
+        chose = findViewById(R.id.chooseImg);
+        imageView = findViewById(R.id.image);
+        title = findViewById(R.id.title);
+        chose.setOnClickListener(this);
+        upload.setOnClickListener(this);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onClick(View view) {
+
+            switch (view.getId()){
+
+               case R.id.uploadImg:
+
+
+                break;
+
+               case R.id.chooseImg:
+                   SelectImage();
+
+                break;
+            }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private void SelectImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,imageRequest);
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+
+        if(requestCode == imageRequest && resultCode == RESULT_OK && data!=null){
+            Uri path = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),path);
+                imageView.setImageBitmap(bitmap);
+                layout.setVisibility(View.VISIBLE);
+                chose.setEnabled(false);
+                upload.setEnabled(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }
