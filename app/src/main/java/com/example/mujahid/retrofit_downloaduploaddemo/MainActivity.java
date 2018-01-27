@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (image1 != null) {
                     Toast.makeText(getApplicationContext(),image1.getResponse(),Toast.LENGTH_LONG).show();
                 }
+                Log.d("error:", image1.getResponse());
                 layout.setVisibility(View.GONE);
                 chose.setEnabled(true);
                 upload.setEnabled(false);
