@@ -1,5 +1,8 @@
 package com.example.mujahid.retrofit_downloaduploaddemo.UploadImageFile;
 
+import android.icu.text.AlphabeticIndex;
+import android.os.Build;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -22,6 +25,7 @@ public class ApiClient {
                 .setLenient()
                 .create();
         if(retrofit == null){
+
             OkHttpClient.Builder okHttp = new OkHttpClient.Builder();
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

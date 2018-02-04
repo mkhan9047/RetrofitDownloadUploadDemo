@@ -12,12 +12,27 @@ package com.example.mujahid.retrofit_downloaduploaddemo.UploadImageFile;
 
     private int sender_age;
 
-    public ImageInfo(String sender_name, int sender_age) {
+    private String email;
+
+    private String phone;
+
+    public ImageInfo(String sender_name, int sender_age, String email, String phone) {
         this.sender_name = sender_name;
         this.sender_age = sender_age;
+        this.email = email;
+        this.phone = phone;
     }
 
+
     private String response;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
 
     public String getResponse() {
         return response;
